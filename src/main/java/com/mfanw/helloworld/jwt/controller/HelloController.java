@@ -1,6 +1,6 @@
 package com.mfanw.helloworld.jwt.controller;
 
-import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsService;
+import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsServiceImpl;
 import com.mfanw.helloworld.jwt.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HelloController {
 
     @Autowired
-    private JwtUserDetailsService userDetailsService;
+    private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -27,7 +27,7 @@ public class HelloController {
     @PostMapping("/doLogin")
     @ResponseBody
     public String doLogin(HttpServletRequest request, String username, String password) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        final UserDetails userDetails = jwtUserDetailsServiceImpl.loadUserByUsername(username);
         return jwtTokenUtil.generateToken(userDetails);
     }
 

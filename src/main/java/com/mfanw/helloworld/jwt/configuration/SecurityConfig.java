@@ -2,7 +2,7 @@ package com.mfanw.helloworld.jwt.configuration;
 
 import com.mfanw.helloworld.jwt.configuration.jwt.JwtAuthenticationEntryPoint;
 import com.mfanw.helloworld.jwt.configuration.jwt.JwtAuthorizationTokenFilter;
-import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsService;
+import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
 
     @Autowired
     private JwtAuthorizationTokenFilter authenticationTokenFilter;
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoderBean());
+        auth.userDetailsService(jwtUserDetailsServiceImpl).passwordEncoder(passwordEncoderBean());
     }
 
     /**

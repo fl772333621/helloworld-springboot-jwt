@@ -28,6 +28,9 @@ public class HelloController {
     @ResponseBody
     public String doLogin(HttpServletRequest request, String username, String password) {
         final UserDetails userDetails = jwtUserDetailsServiceImpl.loadUserByUsername(username);
+        if (username.length() != password.length()) {
+            return "密码错误，请重新输入！";
+        }
         return jwtTokenUtil.generateToken(userDetails);
     }
 

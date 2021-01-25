@@ -16,8 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * @author mengwei
+ */
 @Component
 public class JwtTokenUtil implements Serializable {
+
     private static final long serialVersionUID = -3301605591108950415L;
 
     @Value("${jwt.secret}")
@@ -26,10 +30,7 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    @Value("${jwt.token}")
-    private String tokenHeader;
-
-    private Clock clock = DefaultClock.INSTANCE;
+    private final Clock clock = DefaultClock.INSTANCE;
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();

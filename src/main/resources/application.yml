@@ -4,3 +4,8 @@ server:
 thymeleaf:
   prefix: classpath:/templates/
   mode: LEGACYHTML5
+
+jwt:
+  secret: secret
+  expiration: 7200000
+  token: Authorization

@@ -20,6 +20,17 @@ public class TheymeleafController {
     }
 
     /**
+     * 将/login请求内容展示到 /templates/login.html 上
+     *
+     * @return 页面
+     */
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+
+    /**
      * 将/success请求内容展示到 /templates/success.html 上
      *
      * @return 页面

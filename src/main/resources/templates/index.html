@@ -3,14 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
+    <!-- 必须引入jquery否则无法使用ajax -->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    function  doSubmit() {
+        $.ajax({
+            type: "POST",
+            url: "/doLogin",
+            contentType: "application/json;charset=utf-8",
+            data : {
+                'username': document.getElementById("username").value,
+                'password': document.getElementById("password").value
+            },
+            success: function(result) {
+                document.getElementById("token").value = result;
+            }
+        });
+    }
+    function  sayHello() {
+        $.ajax({
+            type: "POST",
+            url: "/sayHello",
+            contentType: "application/json;charset=utf-8",
+            data : {
+                'username': document.getElementById("username").value,
+                'password': document.getElementById("password").value
+            },
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", document.getElementById("token").value);
+            },
+            success: function(result) {
+                document.getElementById("sayHelloMessage").value = result;
+            }
+        });
+    }
+</script>
 </head>
 <body>
-<form action="#" th:action="@{/doLogin}" method="post">
-    username <input type="text" id="username" name="username" value="username"/>
-    <br/>
-    password <input type="text" id="password" name="password" value="password"/>
-    <br/>
-    <input type="submit"/>
-</form>
+<h1>登陆，获取 token</h1>
+username <input type="text" id="username" name="username" value="username"/>
+<br/>
+password <input type="text" id="password" name="password" value="password"/>
+<br/>
+<button type="button" class="submitButton" th:onclick="'javascript:doSubmit();'">获取 token</button>
+<h1>全局 token 字段</h1>
+token <input type="text" id="token" name="token"/>
+<h1>带 token 的 POST 请求（无 token 请求异常）</h1>
+sayHello <button type="button" class="sayHello" th:onclick="'javascript:sayHello();'">sayHello</button>
+<input type="text" id="sayHelloMessage" name="sayHelloMessage"/>
 </body>
 </html>

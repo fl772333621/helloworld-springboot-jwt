@@ -10,34 +10,46 @@
         $.ajax({
             type: "POST",
             url: "/doLogin",
-            contentType: "application/json;charset=utf-8",
+            contentType: "application/x-www-form-urlencoded",
             data : {
-                'username': document.getElementById("username").value,
-                'password': document.getElementById("password").value
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
             },
             success: function(result) {
                 document.getElementById("token").value = result;
             }
         });
     }
-    function  sayHello() {
+    function  hello() {
         $.ajax({
             type: "POST",
-            url: "/sayHello",
-            contentType: "application/json;charset=utf-8",
-            data : {
-                'username': document.getElementById("username").value,
-                'password': document.getElementById("password").value
-            },
+            url: "/hello",
+            contentType: "application/x-www-form-urlencoded",
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization", document.getElementById("token").value);
             },
             success: function(result) {
-                document.getElementById("sayHelloMessage").value = result;
+                document.getElementById("helloMessage").value = result;
+            },
+            error:function (data, status, e){
+                alert("token 异常，请重新获取 token 再执行！");
             }
         });
     }
-</script>
+    function  helloPermitAll() {
+        $.ajax({
+            type: "POST",
+            url: "/helloPermitAll",
+            contentType: "application/x-www-form-urlencoded",
+            success: function(result) {
+                document.getElementById("helloPermitAllMessage").value = result;
+            },
+            error:function (data, status, e){
+                alert("error");
+            }
+        });
+    }
+    </script>
 </head>
 <body>
 <h1>登陆，获取 token</h1>
@@ -46,10 +58,17 @@ username <input type="text" id="username" name="username" value="username"/>
 password <input type="text" id="password" name="password" value="password"/>
 <br/>
 <button type="button" class="submitButton" th:onclick="'javascript:doSubmit();'">获取 token</button>
-<h1>全局 token 字段</h1>
-token <input type="text" id="token" name="token"/>
+<br/>
+全局 token <textarea id="token"></textarea>
+
 <h1>带 token 的 POST 请求（无 token 请求异常）</h1>
-sayHello <button type="button" class="sayHello" th:onclick="'javascript:sayHello();'">sayHello</button>
-<input type="text" id="sayHelloMessage" name="sayHelloMessage"/>
+hello
+<button type="button" class="hello" th:onclick="'javascript:hello();'">hello</button>
+<input type="text" id="helloMessage" name="helloMessage"/>
+
+<h1>不带 token 的 POST 请求（无 token 可请求并返回结果）</h1>
+hello
+<button type="button" class="helloPermitAll" th:onclick="'javascript:helloPermitAll();'">helloPermitAll</button>
+<input type="text" id="helloPermitAllMessage" name="helloMessage"/>
 </body>
 </html>

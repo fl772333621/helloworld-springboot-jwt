@@ -59,11 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
                 .antMatchers("/doLogin").permitAll()
                 .antMatchers("/helloPermitAll").permitAll()
-                .antMatchers("/sysUser/test").permitAll()
-                .antMatchers("*.js").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
                 .anyRequest().authenticated()       // 剩下所有的验证都需要验证
                 .and()

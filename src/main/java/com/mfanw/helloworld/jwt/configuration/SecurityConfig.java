@@ -40,9 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 认证
-     *
-     * @param auth
-     * @throws Exception
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,17 +56,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                // 设置/doLogin请求无需登录任何人都可访问
                 .antMatchers("/doLogin").permitAll()
+                // 设置/helloPermitAll请求无需登录任何人都可访问
                 .antMatchers("/helloPermitAll").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
-                .anyRequest().authenticated()       // 剩下所有的验证都需要验证
+                // 剩下所有的验证都需要验证
+                .anyRequest().authenticated()
                 .and()
-                .csrf().disable()                      // 禁用 Spring Security 自带的跨域处理
+                // 禁用 Spring Security 自带的跨域处理
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // 定制我们自己的 session 策略：调整为让 Spring Security 不创建和使用 session
-
         http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Bean

@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * @author mengwei
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)

@@ -59,12 +59,15 @@ password <input type="text" id="password" name="password" value="password"/>
 <br/>
 <button type="button" class="submitButton" th:onclick="'javascript:doSubmit();'">获取 token</button>
 <br/>
-全局 token <textarea id="token"></textarea>
+<h1>全局 token</h1>
+<textarea id="token"></textarea>
+<br/>
 
 <h1>带 token 的 POST 请求（无 token 请求异常）</h1>
 hello
 <button type="button" class="hello" th:onclick="'javascript:hello();'">hello</button>
 <input type="text" id="helloMessage" name="helloMessage"/>
+<br/>
 
 <h1>不带 token 的 POST 请求（无 token 可请求并返回结果）</h1>
 hello

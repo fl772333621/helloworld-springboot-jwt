@@ -29,6 +29,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * 存放了Swagger需要加入Spring Security认证的URL
+     */
+    private static final String[] SWAGGER_URLS = {
+            "/v2/api-docs",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
+
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -60,6 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/doLogin").permitAll()
                 // 设置/helloPermitAll请求无需登录任何人都可访问
                 .antMatchers("/helloPermitAll").permitAll()
+                // 设置SWAGGER_URLS请求无需登录任何人都可访问
+                .antMatchers(SWAGGER_URLS).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
                 // 剩下所有的验证都需要验证
                 .anyRequest().authenticated()

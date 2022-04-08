@@ -1,5 +1,6 @@
 package com.mfanw.helloworld.jwt.configuration.jwt;
 
+import com.mfanw.helloworld.jwt.service.JwtUserDetailService;
 import com.mfanw.helloworld.jwt.util.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,14 +24,11 @@ import java.io.IOException;
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthorizationTokenFilter.class);
-
+    private final String tokenHeader;
     @Autowired
-    private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
-
+    private JwtUserDetailService jwtUserDetailService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
-    private final String tokenHeader;
 
     public JwtAuthorizationTokenFilter(@Value("${jwt.token}") String tokenHeader) {
         this.tokenHeader = tokenHeader;
@@ -46,7 +43,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             String username = jwtTokenUtil.getUsernameFromToken(authToken);
             LOGGER.warn("username=" + username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = jwtUserDetailsServiceImpl.loadUserByUsername(username);
+                SecurityUserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
                 LOGGER.warn("userDetails=" + userDetails);
                 if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -56,4 +53,5 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
 }

@@ -1,13 +1,13 @@
 package com.mfanw.helloworld.jwt.controller;
 
-import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsServiceImpl;
+import com.mfanw.helloworld.jwt.configuration.jwt.SecurityUserDetails;
+import com.mfanw.helloworld.jwt.service.JwtUserDetailService;
 import com.mfanw.helloworld.jwt.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HelloController {
 
     @Autowired
-    private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
-
+    private JwtUserDetailService jwtUserDetailService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -37,8 +36,11 @@ public class HelloController {
     @PostMapping("/doLogin")
     @ResponseBody
     public String doLogin(HttpServletRequest request, String username, String password) {
-        final UserDetails userDetails = jwtUserDetailsServiceImpl.loadUserByUsername(username);
-        if (username.length() != password.length()) {
+        final SecurityUserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
+        if (userDetails == null) {
+            return "用户不存在，请重新输入！";
+        }
+        if (!userDetails.getPassword().equals(password)) {
             return "密码错误，请重新输入！";
         }
         return jwtTokenUtil.generateToken(userDetails);
@@ -57,4 +59,5 @@ public class HelloController {
     public String helloPermitAll() {
         return "hello 陌生人~";
     }
+
 }

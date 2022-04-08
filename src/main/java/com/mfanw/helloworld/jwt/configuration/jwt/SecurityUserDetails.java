@@ -16,16 +16,12 @@ import java.util.Collection;
 @Accessors(chain = true)
 public class SecurityUserDetails implements UserDetails {
 
+    private Integer id;
     private String username;
-
     private String password;
-
+    private String address;
+    private int sex;
     private Collection<? extends GrantedAuthority> authorities;
-
-    public SecurityUserDetails(String username, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.authorities = authorities;
-    }
 
     @Override
     public String getUsername() {
@@ -81,4 +77,5 @@ public class SecurityUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

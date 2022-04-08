@@ -2,7 +2,7 @@ package com.mfanw.helloworld.jwt.configuration;
 
 import com.mfanw.helloworld.jwt.configuration.jwt.JwtAuthenticationEntryPoint;
 import com.mfanw.helloworld.jwt.configuration.jwt.JwtAuthorizationTokenFilter;
-import com.mfanw.helloworld.jwt.configuration.jwt.JwtUserDetailsServiceImpl;
+import com.mfanw.helloworld.jwt.service.JwtUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,13 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/webjars/**"
     };
-
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     @Autowired
-    private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
-
+    private JwtUserDetailService jwtUserDetailService;
     @Autowired
     private JwtAuthorizationTokenFilter authenticationTokenFilter;
 
@@ -55,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsServiceImpl).passwordEncoder(passwordEncoderBean());
+        auth.userDetailsService(jwtUserDetailService).passwordEncoder(passwordEncoderBean());
     }
 
     /**

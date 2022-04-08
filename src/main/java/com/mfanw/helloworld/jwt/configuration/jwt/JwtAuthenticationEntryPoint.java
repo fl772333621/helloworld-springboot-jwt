@@ -23,8 +23,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException)
             throws IOException {
-
         LOGGER.warn("JwtAuthenticationEntryPoint:" + authException.getMessage());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "没有凭证");
     }
+
 }

@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -23,16 +22,13 @@ import java.util.function.Function;
 public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
-
+    private final Clock clock = DefaultClock.INSTANCE;
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    private final Clock clock = DefaultClock.INSTANCE;
-
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(SecurityUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
@@ -40,7 +36,6 @@ public class JwtTokenUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -54,12 +49,9 @@ public class JwtTokenUtil implements Serializable {
         return new Date(createdDate.getTime() + expiration);
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        SecurityUserDetails user = (SecurityUserDetails) userDetails;
+    public Boolean validateToken(String token, SecurityUserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(user.getUsername())
-                && !isTokenExpired(token)
-        );
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public String getUsernameFromToken(String token) {
@@ -77,7 +69,6 @@ public class JwtTokenUtil implements Serializable {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
